@@ -17,3 +17,9 @@ Docker run -d -p 5000:5000 carmenta:latest
 ```
 Running on 127.0.0.1:5000
 ```
+
+## Stopping
+
+```
+Docker stop carmenta:latest
+``` 
