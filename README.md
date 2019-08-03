@@ -1,10 +1,19 @@
 # Carmenta: Goddess of Childbirth and Prophecy
 
+## Building
+
+```
+Docker build -t carmenta:latest .
+```
 
 ## Running
 
 ```
-$ export FLASK_APP=root.py
-$ flask run
- * Running on http://127.0.0.1:5000/
+Docker run -d -p 5000:5000 carmenta:latest
+```
+
+## Testing
+
+```
+Running on 127.0.0.1:5000
 ```
