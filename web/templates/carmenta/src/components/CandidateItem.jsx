@@ -24,10 +24,8 @@ export default function CandidateItem({ user, isItemSelected, labelId, handleCli
       <TableCell component="th" id={labelId} scope="row" padding="none">
         {user.name}
       </TableCell>
-      <TableCell align="right">{user.calories}</TableCell>
-      <TableCell align="right">{user.fat}</TableCell>
-      <TableCell align="right">{user.carbs}</TableCell>
-      <TableCell align="right">{user.protein}</TableCell>
+      <TableCell align="right">{user.title}</TableCell>
+      <TableCell align="right">{user.label}</TableCell>
     </TableRow>
   );
 }
