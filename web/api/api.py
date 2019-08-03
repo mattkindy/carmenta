@@ -25,7 +25,7 @@ def show(page):
     abort(404)
 
 
-@api_page.route('/scrape_user')
+@api_page.route('/scrape/user')
 def scrape_user():
   link = request.args.get('link')
 
@@ -33,7 +33,7 @@ def scrape_user():
   return link
 
 
-@api_page.route('/scrape_user/connections')
+@api_page.route('/scrape/user/connections')
 def scrape_user_connections():
   args = request.args
   link = args.get('link')
@@ -67,11 +67,17 @@ def linkedin_login(driver, linkedin_username, linkedin_password):
   sign_in_button.click()
 
 
-@api_page.route('/scraper')
+@api_page.route('/scrape/company')
 def scraper():
   keyword = "Security"
+
+  args = request.args
+  username = args.get('username')
+  password = args.get('password')
+
   driver = webdriver.Chrome()
-  linkedin_login(driver)
+  linkedin_login(driver, linkedin_username=username, linkedin_password=password)
+
   company_url = 'https://www.linkedin.com/company/praetorian/'
   praetorian = Company(company_url, driver=driver, scrape=False)
   print('Making request for {}'.format(company_url))
