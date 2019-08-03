@@ -3,6 +3,12 @@ import { Grid, TextField, Button } from '@material-ui/core';
 import scrapingService from '../service/ScrapingService';
 
 export default class StartScrapingDialog extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {}
+  }
+
   setUsername(username) {
     this.setState({
       username,
