@@ -5,7 +5,7 @@
 Make sure you have docker installed, then run:
 
 ```
-docker-compose up
+docker-compose up --build
 ```
 
 ## Testing

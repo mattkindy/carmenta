@@ -44,7 +44,7 @@ def scrape_user_connections():
 
   data = request.get_json()
 
-  driver = webdriver.Chrome(options=chrome_options)
+  driver = webdriver.Chrome()
   linkedin_login(driver, linkedin_username=data['username'], linkedin_password=data['password'])
 
   candidate = Candidate(data['link'], driver=driver, scrape=False)
