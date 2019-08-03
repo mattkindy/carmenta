@@ -2,6 +2,8 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import StartScrapingDialog from './components/StartScrapingDialog'
+import CandidateList from './components/CandidateList';
+
 
 function App() {
   return (
@@ -11,6 +13,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
+        <CandidateList />
         <StartScrapingDialog />
       </header>
     </div>
