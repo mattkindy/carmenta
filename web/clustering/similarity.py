@@ -12,7 +12,7 @@ def similarity_metric(first, second):
 
 
 #Takes candidate json object and converts the values to appropriate input for similarity matrix
-def candidates_to_metrics(candidates, known_good=1):
+def candidates_to_metrics(candidates):
     X = []
     for candidate in candidates:
         x = [len(candidate["name"])]
@@ -22,5 +22,4 @@ def candidates_to_metrics(candidates, known_good=1):
         x.append(college_len)
         X.append(x)
 
-    y = [known_good]*len(X)
-    return X, y
+    return X
