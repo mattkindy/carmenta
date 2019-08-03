@@ -23,9 +23,29 @@ def show(page):
     except TemplateNotFound:
         abort(404)
 
+@api_page.route('/scrape_user')
+def scrape_user():
+    link = request.args.get('link')
+
+    #TODO use other library to get a specific profile
+    return link
+
+def linkedin_login(driver):
+    linkedin_username = 'anna.pobletts+hackathon2@praetorian.com'
+    linkedin_password = 'Welcome2PS!'
+    driver.get('https://www.linkedin.com/login')
+
+    username = driver.find_element_by_id('username')
+    username.send_keys(linkedin_username)
+
+    password = driver.find_element_by_id('password')
+    password.send_keys(linkedin_password)
+
+    sign_in_button = driver.find_element_by_xpath('//*[@type="submit"]')
+    sign_in_button.click()
 
 @api_page.route('/scraper')
-def scrape():
+def scraper():
     keyword = "Praetorian"
     if request.args.get('keyword'):
         keyword = request.args.get('keyword')
@@ -34,8 +54,10 @@ def scrape():
         search_number = request.args.get('num')
 
     search_query = 'site:linkedin.com/in/ AND "' + keyword + '"'
+
     driver = webdriver.Chrome(chrome_options=chrome_options)
-    driver.get('https://www.google.com/search?q=' + urllib(search_query) + '&num=2')
+    linkedin_login(driver)
+    driver.get('https://www.google.com/search?' + urllib.parse.urlencode({'q':search_query, "num":search_number}))
     linkedin_urls = driver.find_elements_by_class_name('iUh30')
     linkedin_urls = [url.text for url in linkedin_urls]
 
