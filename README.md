@@ -6,6 +6,16 @@
 Docker build -t carmenta:latest .
 ```
 
+## First Time Setup
+
+Run
+
+```
+$ ./install.sh
+```
+
+This will install `chromedriver` and set up your `~/.bash_profile` to export the `CHROMEDRIVER` environment variable.
+
 ## Running
 
 ```
