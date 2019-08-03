@@ -16,36 +16,7 @@ chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 
 
-@scrape_root.route('/user')
-def scrape_user():
-  link = request.args.get('link')
-
-  # TODO use other library to get a specific profile
-  return link
-
-
-@scrape_root.route('/user/connections')
-def scrape_user_connections():
-  args = request.args
-  link = args.get('link')
-  limit = int(args.get('limit'))
-  username = args.get('username')
-  password = args.get('password')
-
-  driver = webdriver.Chrome(options=chrome_options)
-  linkedin_login(driver, linkedin_username=username, linkedin_password=password)
-
-  candidate = Candidate(link, driver=driver, scrape=False)
-
-  connections = candidate.get_connections(limit=limit)
-  return json.dumps([{
-    'name': str(c.name),
-    'url': c.linkedin_url,
-  } for c in connections])
-
-
 def linkedin_login(driver, linkedin_username, linkedin_password):
-
   driver.get('https://www.linkedin.com/login')
 
   username = driver.find_element_by_id('username')
@@ -58,13 +29,40 @@ def linkedin_login(driver, linkedin_username, linkedin_password):
   sign_in_button.click()
 
 
-@scrape_root.route('/company')
-def scraper():
+@scrape_root.route('/user', methods=['POST'])
+def scrape_user():
+  data = request.get_json()
+
+  # TODO use other library to get a specific profile
+  return data['link']
+
+
+@scrape_root.route('/user/connections', methods=['POST'])
+def scrape_user_connections():
+  args = request.args
+  limit = int(args.get('limit'))
+
+  data = request.get_json()
+
+  driver = webdriver.Chrome(options=chrome_options)
+  linkedin_login(driver, linkedin_username=data['username'], linkedin_password=data['password'])
+
+  candidate = Candidate(data['link'], driver=driver, scrape=False)
+
+  connections = candidate.get_connections(limit=limit)
+  return json.dumps([{
+    'name': str(c.name),
+    'url': c.linkedin_url,
+  } for c in connections])
+
+
+@scrape_root.route('/company', methods=['POST'])
+def scrape_company():
   keyword = "Security"
 
-  args = request.args
-  username = args.get('username')
-  password = args.get('password')
+  data = request.get_json()
+  username = data['username']
+  password = data['password']
 
   driver = webdriver.Chrome()
   linkedin_login(driver, linkedin_username=username, linkedin_password=password)
