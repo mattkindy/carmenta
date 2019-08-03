@@ -10,7 +10,7 @@ file_name = 'results_file.csv'
 linkedin_username = 'anna.pobletts+hackathon@praetorian.com'
 linkedin_password = 'Welcome2PS!'
 
-driver = webdriver.Chrome('/Users/apobletts/bin/chromedriver')
+driver = webdriver.Chrome()
 driver.get('https://www.linkedin.com/login')
 
 username = driver.find_element_by_id('username')
