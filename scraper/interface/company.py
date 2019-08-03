@@ -1,15 +1,13 @@
-import requests
-from linkedin_scraper import Person, Experience
-from linkedin_scraper.objects import Scraper
-from lxml import html
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import time
 import os
 
+from linkedin_scraper.objects import Scraper
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
 from scraper.interface.candidate import Candidate
+from scraper.interface.util import map_from_search
 
 
 class CompanySummary(object):
@@ -86,23 +84,6 @@ class Company(Scraper):
     else:
       self.scrape_not_logged_in(get_employees=get_employees, close_on_complete=close_on_complete)
 
-  def __parse_employee__(self, employee_raw):
-    try:
-      result_link = employee_raw.find_element_by_class_name("search-result__result-link")
-      result_name = employee_raw.find_elements_by_class_name("search-result__result-link")[1]
-
-      candidate = Candidate(linkedin_url=(result_link.get_attribute("href")),
-                         name=result_name.text.encode('utf-8').strip(),
-                         driver=self.driver,
-                         get=False,
-                         scrape=False)
-
-      position_title = employee_raw.find_element_by_xpath('.//span[@dir="ltr"]')
-      candidate.add_experience(Experience(position_title=position_title.text))
-      return candidate
-    except:
-      return None
-
   def get_employees(self, wait_time=10):
     driver = self.driver
 
@@ -110,39 +91,7 @@ class Company(Scraper):
     attribute = see_all_employees.get_attribute("href")
     driver.get(attribute)
 
-    _ = WebDriverWait(driver, wait_time).until(EC.presence_of_element_located((By.CLASS_NAME, "search-results__list")))
-
-    total = []
-    driver.execute_script("window.scrollTo(0, Math.ceil(document.body.scrollHeight/2));")
-    time.sleep(1)
-    driver.execute_script("window.scrollTo(0, Math.ceil(document.body.scrollHeight*3/4));")
-    results_list = driver.find_element_by_class_name("search-results__list")
-    results_li = results_list.find_elements_by_tag_name("li")
-    for res in results_li:
-      total.append(self.__parse_employee__(res))
-
-    while self.driver.find_element_by_class_name("artdeco-pagination__button--next").is_enabled():
-      driver.find_element_by_class_name("artdeco-pagination__button--next").click()
-      _ = WebDriverWait(driver, wait_time).until(EC.staleness_of(driver.find_element_by_class_name("search-result")),
-                                                 'visible')
-
-      driver.execute_script("window.scrollTo(0, Math.ceil(document.body.scrollHeight/4));")
-      time.sleep(1)
-      driver.execute_script("window.scrollTo(0, Math.ceil(document.body.scrollHeight/3));")
-      time.sleep(1)
-      driver.execute_script("window.scrollTo(0, Math.ceil(document.body.scrollHeight/2));")
-      time.sleep(1)
-      driver.execute_script("window.scrollTo(0, Math.ceil(document.body.scrollHeight*2/3));")
-      time.sleep(1)
-      driver.execute_script("window.scrollTo(0, Math.ceil(document.body.scrollHeight*3/4));")
-
-      results_list = driver.find_element_by_class_name("search-results__list")
-      results_li = results_list.find_elements_by_tag_name("li")
-      for res in results_li:
-        _ = WebDriverWait(driver, wait_time).until(EC.visibility_of(res))
-        total.append(self.__parse_employee__(res))
-
-    return total
+    return map_from_search(driver, wait_time, lambda res: Candidate.parse_candidate_from_search_result(self.driver, res))
 
   def scrape_logged_in(self, get_employees=True, close_on_complete=True):
     driver = self.driver

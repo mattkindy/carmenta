@@ -6,15 +6,47 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from scraper.interface.util import map_from_search
+
 
 class Candidate(Person):
   def __init__(self, linkedin_url=None, name=None, experiences=[], educations=[], driver=None, get=True, scrape=True):
     super().__init__(linkedin_url, name, experiences, educations, driver, get, scrape)
 
+  def get_connections(self, limit=None):
+    driver = self.driver
+    # topcard_view_all_connections
+    # /search/results/people/
+    # find_element_by_xpath("//a[contains(@href, '/search/results/people/')]").text
+    driver.find_element_by_xpath("//a[contains(@href, '/search/results/people/')]").click()
+
+    return map_from_search(driver,
+                           wait_time=10,
+                           fn=lambda res: Candidate.parse_candidate_from_search_result(self.driver, res),
+                           limit=limit)
+
+  @staticmethod
+  def parse_candidate_from_search_result(driver, search_result):
+    try:
+      result_link = search_result.find_element_by_class_name("search-result__result-link")
+      result_name = search_result.find_elements_by_class_name("search-result__result-link")[1]
+
+      candidate = Candidate(linkedin_url=(result_link.get_attribute("href")),
+                            name=result_name.text.encode('utf-8').strip(),
+                            driver=driver,
+                            get=False,
+                            scrape=False)
+
+      position_title = search_result.find_element_by_xpath('.//span[@dir="ltr"]')
+      candidate.add_experience(Experience(position_title=position_title.text))
+      return candidate
+    except:
+      return None
+
   def scrape_logged_in(self, close_on_complete=True):
     driver = self.driver
     root = driver.find_element_by_class_name("pv-top-card-v3")
-    self.name = root.find_elements_by_xpath("//section/div/div/div/*/li")[0].text.strip()
+    self.name = str(root.find_elements_by_xpath("//section/div/div/div/*/li")[0].text.strip())
 
     driver.execute_script("window.scrollTo(0, Math.ceil(document.body.scrollHeight/2));")
 
@@ -80,7 +112,7 @@ class Candidate(Person):
       retry_times = retry_times + 1
 
     # get name
-    self.name = driver.find_element_by_id("name").text.strip()
+    self.name = str(driver.find_element_by_id("name").text.strip())
 
     # get experience
     exp = driver.find_element_by_id("experience")

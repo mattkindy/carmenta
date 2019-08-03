@@ -36,6 +36,23 @@ def scrape_user():
   return link
 
 
+@api_page.route('/scrape_user/connections')
+def scrape_user_connections():
+  link = request.args.get('link')
+  limit = int(request.args.get('limit'))
+
+  driver = webdriver.Chrome()
+  linkedin_login(driver)
+
+  candidate = Candidate(link, driver=driver, scrape=False)
+
+  connections = candidate.get_connections(limit=limit)
+  return json.dumps([{
+    'name': c.name,
+    'url': c.linkedin_url,
+  } for c in connections])
+
+
 def linkedin_login(driver):
   linkedin_username = 'matt.kindy.ii@gmail.com'
   linkedin_password = '6M0tpDQ5U2He'
@@ -54,10 +71,6 @@ def linkedin_login(driver):
 
 @api_page.route('/scraper')
 def scraper():
-  return scrape()
-
-
-def scrape():
   keyword = "Security"
   driver = webdriver.Chrome()
   linkedin_login(driver)
@@ -107,4 +120,11 @@ def scrape():
 
 
 if __name__ == '__main__':
-  scrape()
+  driver = webdriver.Chrome()
+  linkedin_login(driver)
+
+  candidate = Candidate('https://www.linkedin.com/in/amlweems/', driver=driver, scrape=False)
+
+  connections = candidate.get_connections(limit=5)
+  dumped = json.dumps([{'name': str(c.name), 'url': c.linkedin_url} for c in connections])
+  print(dumped)
