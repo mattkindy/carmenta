@@ -4,7 +4,6 @@ import './App.css';
 import StartScrapingDialog from './components/StartScrapingDialog'
 import CandidateList from './components/CandidateList';
 
-
 function App() {
   return (
     <div className="App">
