@@ -1,2 +1,7 @@
-[{"name": "Andrew Clinton","job_title": "Senior Security Engineer", "company": "  Praetorian\n\n","college": null, "location": null},{"name":"Test User", "job_title":"Security Engineer", "company":"Praetorian","college":"Community College",
-"location":"San Francisco"}]
+[{"name": "Andrew Clinton","job_title": "Senior Security Engineer", "company": "  Praetorian\n\n","college": null, "location": null},
+{"name":"Test User", "job_title":"Security Engineer", "company":"Praetorian","college":"Community College",
+"location":"San Francisco"}, {"name":"Mark Manning", "job_title":"Technical
+Director","company":"NCC Group", "college":"Rochester Institute of
+Technology","location":"Penfield, New York"},{"name":"Dan Hranj",
+"job_title":"Senior Security Intelligence Analyst","company":"Atlassian",
+"college":"Bloomberg University of Pennsylvania","location":"San Francisco, CA"}]

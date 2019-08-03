@@ -60,6 +60,6 @@ def recalculate_clustering():
   ret = []
   for (user, probability) in zip(all_users, probability_calculator.probability(all_users)):
     # update db for user probability
-    ret.append({"user":user, "prob":probability})
+    ret.append({"user":link, "prob":probability})
 
   return json.dumps(ret)
