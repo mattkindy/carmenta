@@ -45,6 +45,7 @@ class Candidate(Person):
 
   def scrape_logged_in(self, close_on_complete=True):
     driver = self.driver
+    _ = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CLASS_NAME, "pv-top-card-v3")))
     root = driver.find_element_by_class_name("pv-top-card-v3")
     self.name = str(root.find_elements_by_xpath("//section/div/div/div/*/li")[0].text.strip())
 
