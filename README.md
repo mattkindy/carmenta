@@ -9,7 +9,7 @@ Docker build -t carmenta:latest .
 ## Running
 
 ```
-Docker run -d -p 5000:5000 --name carmenta carmenta:latest
+Docker run -p 5000:5000 carmenta:latest
 ```
 
 ## Testing
@@ -17,9 +17,3 @@ Docker run -d -p 5000:5000 --name carmenta carmenta:latest
 ```
 Running on 127.0.0.1:5000
 ```
-
-## Stopping
-
-```
-Docker stop carmenta
-``` 
