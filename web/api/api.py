@@ -1,13 +1,8 @@
 from flask import Blueprint, render_template, abort, request
 from jinja2 import TemplateNotFound
 
-from time import sleep
-
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from parsel import Selector
-from selenium.webdriver.common.keys import Keys
-import urllib
 import json
 
 from scraper.interface.candidate import Candidate
@@ -17,7 +12,9 @@ api_page = Blueprint('api', __name__,
                      template_folder='templates')
 
 chrome_options = Options()
-chrome_options.add_argument("--headless")
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
 
 
 @api_page.route('/')
@@ -38,24 +35,25 @@ def scrape_user():
 
 @api_page.route('/scrape_user/connections')
 def scrape_user_connections():
-  link = request.args.get('link')
-  limit = int(request.args.get('limit'))
+  args = request.args
+  link = args.get('link')
+  limit = int(args.get('limit'))
+  username = args.get('username')
+  password = args.get('password')
 
-  driver = webdriver.Chrome()
-  linkedin_login(driver)
+  driver = webdriver.Chrome(options=chrome_options)
+  linkedin_login(driver, linkedin_username=username, linkedin_password=password)
 
   candidate = Candidate(link, driver=driver, scrape=False)
 
   connections = candidate.get_connections(limit=limit)
   return json.dumps([{
-    'name': c.name,
+    'name': str(c.name),
     'url': c.linkedin_url,
   } for c in connections])
 
 
-def linkedin_login(driver):
-  linkedin_username = 'matt.kindy.ii@gmail.com'
-  linkedin_password = '6M0tpDQ5U2He'
+def linkedin_login(driver, linkedin_username, linkedin_password):
 
   driver.get('https://www.linkedin.com/login')
 
@@ -121,7 +119,7 @@ def scraper():
 
 if __name__ == '__main__':
   driver = webdriver.Chrome()
-  linkedin_login(driver)
+  linkedin_login(driver, linkedin_username="user", linkedin_password="pass")
 
   candidate = Candidate('https://www.linkedin.com/in/amlweems/', driver=driver, scrape=False)
 
