@@ -7,7 +7,7 @@ function getUsers() {
   return (dispatch) => {
     userService.getUsers()
       .then((users) => {
-        dispatch(success(users));
+        dispatch(success(users.data));
       });
   };
 }

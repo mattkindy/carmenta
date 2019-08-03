@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const userApiRoot = '/api/users';
+const userApiRoot = '/api/user';
 
 function getUsers() {
   return axios.get(userApiRoot);
