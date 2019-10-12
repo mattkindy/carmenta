@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 from api.api import api_root
+from root import app
 from scraper.interface.candidate import Candidate
 from scraper.interface.company import Company
 
@@ -101,13 +102,21 @@ def scrape_company():
     experience = candidate.experiences[0] if candidate.experiences else None
     education = candidate.educations[0] if candidate.educations else None
 
-    entries.append({
+    entry = {
       'name': candidate.name,
       'job_title': experience.position_title if experience else None,
       'company': experience.institution_name if experience else None,
       'college': education.institution_name if education else None,
       'location': experience.location if experience else None,
-    })
+    }
+
+    entries.append(entry)
+
+    from database.models import Candidate
+    from database.models import db
+    c = Candidate(employee.linkedin_url, employee.name, "mytitle", "schools1", "work1", "location1", "cool")
+    db.session.add(c)
+    db.session.commit()
 
   return json.dumps(entries)
 
