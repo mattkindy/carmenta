@@ -1,5 +1,8 @@
 # Carmenta: Goddess of Childbirth and Prophecy
 
+This project is an experimental attempt to create a tool to automate sourcing by using a sample of "known good" candidates and use 
+information from LinkedIn / social networks to identify other potentially good candidates for a given party
+
 ## Startup
 
 Make sure you have docker installed, then run:
