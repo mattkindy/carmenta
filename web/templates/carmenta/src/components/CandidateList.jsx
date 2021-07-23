@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import CandidateItem from './CandidateItem';
-import userActions from '../redux/actions/UserActions';
-import { connect } from 'react-redux';
+import * as userActions from '../redux/actions/UserActions';
+import { useSelector } from 'react-redux';
+import { useActions } from '../redux/hooks';
 
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -205,9 +205,14 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-function CandidateList({ actions, userList }) {
+const CandidateList = () => {
+  const userList = useSelector((state) => state.user.users || [])
+  const actions = useActions({
+    ...userActions,
+  })
   useEffect(() => {
     actions.getUsers();
+    // eslint-disable-next-line
   }, [true])
 
   const classes = useStyles();
@@ -320,26 +325,4 @@ function CandidateList({ actions, userList }) {
     </div>
   );
 }
-
-function mapStateToProps(state) {
-  const {
-    user: { users = [] },
-  } = state;
-  
-  return {
-    userList: users,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return { actions: bindActionCreators({...userActions}, dispatch) };
-}
-
-CandidateList.propTypes = {
-  userList: PropTypes.array.isRequired,
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CandidateList);
+export default CandidateList;

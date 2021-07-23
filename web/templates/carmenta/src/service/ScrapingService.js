@@ -1,7 +1,3 @@
-function scrape(username, password) {
+export default function scrape(username, password) {
   // axios call here
-}
-
-export default {
-  scrape,
 }

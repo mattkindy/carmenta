@@ -5,7 +5,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 from api.api import api_root
-from root import app
 from scraper.interface.candidate import Candidate
 from scraper.interface.company import Company
 

@@ -10,8 +10,13 @@ from scraper.interface.util import map_from_search
 
 
 class Candidate(Person):
-  def __init__(self, linkedin_url=None, name=None, experiences=[], educations=[], driver=None, get=True, scrape=True):
+  def __init__(self, linkedin_url=None, name=None, experiences=None, educations=None, driver=None, get=True, scrape=True):
     super().__init__(linkedin_url, name, experiences, educations, driver, get, scrape)
+    if educations is None:
+      educations = []
+
+    if experiences is None:
+      experiences = []
 
   def get_connections(self, limit=None):
     driver = self.driver

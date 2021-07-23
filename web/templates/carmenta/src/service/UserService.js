@@ -2,10 +2,6 @@ import axios from 'axios';
 
 const userApiRoot = '/api/user';
 
-function getUsers() {
+export function getUsers() {
   return axios.get(userApiRoot);
-}
-
-export default {
-  getUsers,
 }

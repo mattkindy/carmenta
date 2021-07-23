@@ -40,7 +40,7 @@ export default class StartScrapingDialog extends Component {
 
   render() {
     return (
-      <Grid direction="column">
+      <Grid>
         <TextField
           label="LinkedIn Username"
           onChange={e => this.setUsername(e.target.value)}
